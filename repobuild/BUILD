@@ -17,7 +17,8 @@
                      "//repobuild/env:input",
                      "//repobuild/env:target",
                      "//repobuild/generator:generator"
-                   ]
+                   ],
+   "cc_linker_args": [ "-static" ]
    }
  }
 ]
