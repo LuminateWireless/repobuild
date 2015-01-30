@@ -41,7 +41,7 @@ void CCLibraryNode::Parse(BuildFile* file, const BuildFileNode& input) {
   // cc_objs
   current_reader()->ParseRepeatedFiles("cc_objects", &objects_);
 
-  // emphemeral cc sources
+  // ephemeral cc sources
   std::vector<Resource> ephemeral_cc_sources;
   current_reader()->ParseRepeatedFiles("ephemeral_cc_sources",
 				       &ephemeral_cc_sources);
@@ -136,7 +136,7 @@ void CCLibraryNode::Init() {
                   " ",
                   strings::JoinAll(cc_compile_args_, " "),
                   strings::JoinAll(clang_cc_compile_args_, " ")));
-  
+
   // header_compile_args
   AddVariable(kCxxHeaderArgs, kCHeaderArgs,
               strings::JoinWith(
@@ -216,7 +216,7 @@ void CCLibraryNode::WriteCompile(const Resource& source,
                          " ",
                          strings::JoinAll(input_files.files(), " "),
                          source.path()));
-  
+
   // Mkdir command.
   rule->WriteCommand("mkdir -p " + obj.dirname());
 
@@ -398,7 +398,7 @@ string WriteCxxflag(const Input& input, bool gcc, bool basic) {
   out.append("\n");
   return out;
 }
-                 
+
 }  // anonymous namespace
 
 // static
