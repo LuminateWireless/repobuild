@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 #include <string>
+#include "common/base/flags.h"
 #include "common/log/log.h"
 #include "common/strings/strutil.h"
 #include "common/util/stl.h"
@@ -19,6 +20,8 @@
 using std::string;
 using std::vector;
 using std::set;
+
+DEFINE_bool(generate_licenses, false, "generate license info");
 
 namespace repobuild {
 namespace {
@@ -145,16 +148,24 @@ string Generator::GenerateMakefile(const Input& input) {
 
   // Write the licences rule.
   Makefile::Rule* license_rule = out.StartRawRule("licenses", "");
-  license_rule->WriteCommand("echo \"License information.\"");
-  for (const Node* node : parser.input_nodes()) {
-    set<string> licenses;
-    node->Licenses(&licenses);
-    string output = "printf \"" + node->target().full_path() + " =>\\n";
-    for (const string& license : licenses) {
-      output += "    " + license + "\\n";
+  if (FLAGS_generate_licenses) {
+    license_rule->WriteCommand("echo \"License information.\"");
+    for (const Node* node : parser.input_nodes()) {
+      set<string> licenses;
+      // Because Node::Licenses does not mark nodes as already
+      // visited, the naive recursive implementation is potentially
+      // exponential.  (Consider deep dependence graphs where nodes
+      // have multiple incoming edges.)
+      node->Licenses(&licenses);
+      string output = "printf \"" + node->target().full_path() + " =>\\n";
+      for (const string& license : licenses) {
+        output += "    " + license + "\\n";
+      }
+      output += "\\n\"";
+      license_rule->WriteCommand(output);
     }
-    output += "\\n\"";
-    license_rule->WriteCommand(output);
+  } else {
+    license_rule->WriteCommand("echo \"; use repobuild --generate_licenses.\"");
   }
   out.FinishRule(license_rule);
 
