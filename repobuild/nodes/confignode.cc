@@ -144,7 +144,7 @@ void ConfigNode::AddSymlink(const string& dir,
   rule->WriteCommand(strings::Join(
       "mkdir -p ", strings::PathDirname(dir), "; ",
       "[ -d ", source, " ] || mkdir -p ", source, "; ",
-      "ln -f -s ", link, " ", dir));
+      "ln -f -s -T ", link, " ", dir));
   out->FinishRule(rule);
 
   // Dummy file (to avoid directory timestamp causing everything to rebuild).
