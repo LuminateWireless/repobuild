@@ -28,7 +28,7 @@ namespace repobuild {
 PyLibraryNode::PyLibraryNode(const TargetInfo& t,
                              const Input& i,
                              DistSource* s)
-    : Node(t, i, s) {
+    : Node(t, i, s), py_interpreter_("python") {
 }
 
 PyLibraryNode::~PyLibraryNode() {
@@ -36,6 +36,12 @@ PyLibraryNode::~PyLibraryNode() {
 
 void PyLibraryNode::Parse(BuildFile* file, const BuildFileNode& input) {
   Node::Parse(file, input);
+
+  py_interpreter_ = "python";
+  current_reader()->ParseStringField("py_interpreter", &py_interpreter_);
+
+  py_linker_ = "plink";
+  current_reader()->ParseStringField("py_linker", &py_linker_);
 
   // py_sources
   current_reader()->ParseRepeatedFiles("py_sources", &sources_);
@@ -70,8 +76,8 @@ void PyLibraryNode::LocalWriteMakeInternal(bool write_user_target,
   // Syntax check.
   string sources = strings::JoinAll(symlinked_sources, " ");
   Makefile::Rule* rule = out->StartRule(touchfile_.path(), sources);
-  rule->WriteUserEcho("Compiling", target().full_path() + " (python)");
-  rule->WriteCommand("python -m py_compile " + sources);
+  rule->WriteUserEcho("Compiling", target().full_path() + " (" + py_interpreter_ + ")");
+  rule->WriteCommand(py_interpreter_ + " -m py_compile " + sources);
   rule->WriteCommand("mkdir -p " + Touchfile().dirname());
   rule->WriteCommand("touch " + Touchfile().path());
   out->FinishRule(rule);

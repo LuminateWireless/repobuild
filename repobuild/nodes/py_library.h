@@ -47,7 +47,8 @@ class PyLibraryNode : public Node {
   Resource PyFileFor(const Resource& r) const;
 
   Resource touchfile_;
-  std::string py_base_dir_;
+  std::string py_interpreter_;
+  std::string py_linker_;
   std::vector<Resource> sources_;
   std::vector<std::string> sys_deps_;
   std::unique_ptr<ComponentHelper> component_;

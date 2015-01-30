@@ -43,7 +43,7 @@ void PyBinaryNode::LocalWriteMake(Makefile* out) const {
   // really isn't much reason to inherit from egg, but for now this is
   // working.
   string deps = sys_deps_.empty() ? "" : "-L " + strings::JoinAll(sys_deps_, " -L ");
-  rule->WriteCommand("plink --output " + bin.path() + " --main-file " + input().pkgfile_dir() + "/" + py_default_module_ + " " + deps + " --pkg-dir " + input().pkgfile_dir());
+  rule->WriteCommand(py_linker_ + " --output " + bin.path() + " --main-file " + input().pkgfile_dir() + "/" + py_default_module_ + " " + deps + " --pkg-dir " + input().pkgfile_dir());
 
   // rule->WriteCommand("echo 'PYTHONPATH=$$(pwd)/$$(dirname $$0)/" +
   //                    egg.basename() +":$$PYTHONPATH python " + module +
