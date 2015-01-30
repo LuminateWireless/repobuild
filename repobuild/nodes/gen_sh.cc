@@ -158,6 +158,7 @@ string GenShNode::WriteCommand(const map<string, string>& env_vars,
   out.append("; GEN_DIR=\"" + JoinRoot(GenDir()) + "\"");
   out.append("; OBJ_DIR=\"" + JoinRoot(ObjectDir()) + "\"");
   out.append("; SRC_DIR=\"" + JoinRoot(SourceDir()) + "\"");
+  out.append("; PKG_DIR=\"" + JoinRoot(PackageDir()) + "\"");
   out.append(" " + string(kRootDir) + "=\"$(" + string(kRootDir) + ")\" ");
   AddEnvVar("CXX_GCC", &out);
   AddEnvVar("CC_GCC", &out);
